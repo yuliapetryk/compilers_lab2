@@ -105,6 +105,8 @@ using utils::nl;
 // Declare precedence rules
 
 %nonassoc FUNCTION VAR TYPE DO OF ASSIGN;
+%left OR;
+%left AND;
 %left PLUS;
 %left MINUS;
 %left DIVIDE;
@@ -183,6 +185,12 @@ opExpr: expr PLUS expr   { $$ = new BinaryOperator(@2, $1, $3, o_plus); }
         $$ = new IfThenElse(@2, $1,
                             new IfThenElse(@3, $3, new IntegerLiteral(nl, 1), new IntegerLiteral(nl, 0)),
                             new IntegerLiteral(nl, 0));
+      }
+      | expr OR expr     {
+        $$ = new IfThenElse(@2, $1,
+                            new IntegerLiteral(nl, 1),
+                            new IfThenElse(@3, $3, new IntegerLiteral(nl, 1), 
+new IntegerLiteral(nl, 0)));
       }
 ;
 
